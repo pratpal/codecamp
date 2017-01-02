@@ -1,0 +1,21 @@
+{
+  "name": "@psharma/new",
+  "version": "1.0.2",
+  "description": "Just testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pratpal/hello-world.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pratpal/hello-world/issues"
+  },
+  "homepage": "https://github.com/pratpal/hello-world#readme",
+  "dependencies": {},
+  "devDependencies": {}
+}
