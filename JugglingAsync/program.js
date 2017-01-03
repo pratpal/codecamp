@@ -1,38 +1,41 @@
-var http = require('http');
-var i = 0;
-var rawData = {};
-var urls = [process.argv[2],process.argv[3],process.argv[4]];
-var count = 0;
+'use strict';
+var http = require('http'),
+    urls = process.argv.slice(2),
+    results = {},
+    count = 0;
 
 
+var print = function (results) {
 
-
-var print = function () {
-    var j;
-    for (j = 0; j < urls.length; ++j) {
-        console.log(rawData[j]);
+    for (var i = 0; i < 3; ++i) {
+        console.log(results[i]);
     }
 };
 
 
-	urls.forEach(function(url) {
-		var d= "";
-		http.get(url, (res) =>{
-			res.setEncoding('utf8');
-			res.on('data', (chunk) => {
-			  d += chunk;  
-			});
-			res.on('end', () => {
-			   rawData[i] = d;
-			   count += 1;
-            	if (count === 3) {
-                	print();
-            	}
-			});
-		}).on('error', (e) => {
-		console.log(`Got error: ${e.message}`);
-		});
-		i = i + 1;
-	});
+var aggregateContents = function (i) {
+
+    http.get(urls[i], function (resp) {
+
+        var data = '';
+        resp.setEncoding('utf8');
+        resp.on('error', console.error);
+        resp.on('data', function (d) {
+
+            data += d;
+        });
+
+        resp.on('end', function () {
+			results[i] = data;
+            count += 1;
+            if (count === 3) {
+                print(results);
+            }
+        });
+    });
+};
 
 
+for (var i = 0; i < 3; ++i) {
+   aggregateContents(i);
+}
