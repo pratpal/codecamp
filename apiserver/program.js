@@ -1,21 +1,37 @@
 'use strict';
-var fs = require('fs'),
+var url = require('url'),
     http = require('http'),
-    map = require('through2-map'),
-    port = process.argv[2];
+    port =process.argv[2];
   
  
 
 
 
 var server = http.createServer((req,res) => {
-  if (req.method !== 'POST') {
-        return res.end('send me a POST\n')
-      } 
-   return req.pipe(map(function (chunk) {
-        return chunk.toString().toUpperCase()
-    })).pipe(res)
-   
+  var parse = url.parse(req.url, true);
+  var result  = '';
+  var isodate = new Date(parse.query.iso);
+  
+  console.log(parse);
+  console.log(parse.query.iso);
+  
+  if (parse.pathname.indexOf('parsetime') > 0){
+      result = {
+            hour: isodate.getHours(),
+            minute: isodate.getMinutes(),
+            second: isodate.getSeconds()
+        };
+  }
+  else if (parse.pathname.indexOf('unixtime') > 0){
+      result = {
+            unixtime: isodate.getTime()
+        };
+  }
+  
+  res.writeHead(200, { 'Content-Type': 'application/json' })
+  
+  
+  return res.end(JSON.stringify(result));
   
 })
 
