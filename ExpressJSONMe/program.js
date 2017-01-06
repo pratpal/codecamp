@@ -1,14 +1,15 @@
 'use strict';
 var express = require('express'),
-    http = require('http'),
+    fs = require("fs"),
     port = process.argv[2];
     
 var app = express();
 
-app.get("/home", function(req,res){
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.end("Hello World!");
-    
+app.get("/books", function(req,res){
+   
+   fs.readFile(process.argv[3], function(err,data){
+            res.json(JSON.parse(data));
+   });
 });
 
 app.listen(port)
